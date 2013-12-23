@@ -22,6 +22,7 @@ public class LSystem implements ApplicationListener,InputProcessor {
 	private Sprite sprite;
 	private ShapeRenderer renderer;
 	private LSystemRenderer sRenderer;
+	LSystemGenerator system;
 	
 	@Override
 	public void create() {		
@@ -44,17 +45,65 @@ public class LSystem implements ApplicationListener,InputProcessor {
 	//	system.addRule(new Rule(1,'F',"F-G+F+G-F"));
 	//	system.addRule(new Rule(1,'G',"GG"));
 		
-	//	Temp system = new Temp("X");
-	//	system.addRule(new Rule(1,'X',"F-[[X]+X]+F[+FX]-X"));
-	//	system.addRule(new Rule(1,'F',"FF"));
-		
-		LSystemGenerator system = new LSystemGenerator("F");
-		system.addRule(new Rule(1,'F',"FF-[-F+F+F]+[+F-F-F]"));
+	    //system = new LSystemGenerator("X");
+		//system.addRule(new Rule(1,'X',"F-[[X]+X]+F[+FX]-X"));
 		//system.addRule(new Rule(1,'F',"FF"));
 		
+		
+		//system = new LSystemGenerator("F");
+		//system.addRule(new Rule(.5f,'F',"FF-[-F+F+F]+[+F-F-F]"));
+		//system.addRule(new Rule(.5f,'F',"FF"));
+		//LSystemGenerator system = new LSystemGenerator("F");
+		//system.addRule(new Rule(.33f,'F',"F[+F]F[-F]F"));
+		//system.addRule(new Rule(.33f,'F',"F[+F]F"));
+		//system.addRule(new Rule(.34f,'F',"F[-F]F"));
+		
+		system = new LSystemGenerator("F(2,9,3)F(4,5,6)");
+		system.addRule(new Rule("F(i,j,k)->F(i*j,j+2,k+3)K(1,1,1)"));
+		system.addRule(new Rule("K(i,j,K)->F(1,1,1)"));
+		///system.addRule(new Rule(".5|a<F(A,a,a)>b->F[-F[-F++F]]"));
+		//system.addRule(new Rule(.5f,'\0','F','\0',"F[+F[+F--F]]"));
+		//system.addRule(new Rule(.5f,'\0','F','\0',"F[-F[-F++F]]"));
+		//system.addRule(new Rule(.34f,'F',"F[-F]F"));
+		
+		//LSystemGenerator system = new LSystemGenerator("F+F+F+F");
+		//system.addRule(new Rule(1,'F',"F+F-F-FF+F+F-F"));
+		
+		
+		
+		
+		new ParametricOperation("i+5.5");
+		new ParametricOperation("i-.5");
+		new ParametricOperation("i*2.0");
+		new ParametricOperation("i/5");
+		
+		new ParametricOperation("5.5+5.5");
+		new ParametricOperation(".5-.5");
+		new ParametricOperation("111.11*2.0");
+		new ParametricOperation("22/5");
+		
+		
+		new ParametricOperation("i+i");
+		new ParametricOperation("j-i");
+		new ParametricOperation("k*i");
+		new ParametricOperation("5/i");
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		renderer = new ShapeRenderer();
-		String t = system.iterate(4);
-		System.out.println(t);
+		String t = "";
+		for(int i = 0; i < 5; i ++){
+			t = system.iterate(i);
+			System.out.println("ITERATION " + i  + " : " + t);
+		}
 		sRenderer = new LSystemRenderer(t);
 		
 	}
@@ -67,6 +116,10 @@ public class LSystem implements ApplicationListener,InputProcessor {
 
 	@Override
 	public void render() {	
+		if(Gdx.input.isKeyPressed(Keys.Z)) 
+			camera.zoom += 1 * Gdx.graphics.getDeltaTime();
+		if(Gdx.input.isKeyPressed(Keys.N)) 
+			sRenderer.setSystem(system.iterate(6));
 		int speed = (int)(100 * camera.zoom);
 		if(Gdx.input.isKeyPressed(Keys.W)) 
 			camera.translate(0, Gdx.graphics.getDeltaTime() * speed);
@@ -77,7 +130,7 @@ public class LSystem implements ApplicationListener,InputProcessor {
 		if(Gdx.input.isKeyPressed(Keys.D)) 
 			camera.translate(Gdx.graphics.getDeltaTime() * speed, 0);
 		camera.update();
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		camera.translate(new Vector2(0,0));
 		batch.setProjectionMatrix(camera.combined);

@@ -12,8 +12,11 @@ public class LSystemRenderer {
 	private String system;
 	private int width = 2;
 	private int height = 10;
-	private int rotateLeft = 25;
-	private int rotateRight = 16;
+	private int rotateLeft = 10;
+	private int rotateRight = 5;
+    private Color start = Color.valueOf("D4E576");
+    private Color end = Color.valueOf("126845");
+    
 	public LSystemRenderer(String system){
 		this.system = system;
 		generateBranches();
@@ -41,11 +44,11 @@ public class LSystemRenderer {
 			
 			if(val == 'F' || val == 'G'){
 				if(current == null){
-					current = new Branch(i,Branch.Center,0,0,width,height,rotation,Color.BLACK);
+					current = new Branch(i,Branch.Center,0,0,width,height,rotation,start.cpy().lerp(end.cpy(), i/(float)system.length()));
 					branches.add(current);
 				}else{
 					Vector2 center = current.getCenterPosition();
-					current = new Branch(i,Branch.Center,center.x,center.y,width,height,rotation,Color.BLACK);
+					current = new Branch(i,Branch.Center,center.x,center.y,width,height,rotation,start.cpy().lerp(end.cpy(), i/(float)system.length()));
 					branches.add(current);
 				}
 			}
